@@ -12,12 +12,6 @@ def sinewave(x, t):
     return np.sin(3 * np.pi * (x+t))
 
 
-dx=1/40
-dt=1/1600
-Tmax=4
-
-
-
 def fdtd1Dtw(method, dx=1/40, dt=1/1600, Tmax=4):
 
     nmax=int(np.ceil(Tmax/dt))
@@ -88,9 +82,3 @@ def fdtd1Dtw(method, dx=1/40, dt=1/1600, Tmax=4):
         errEz = np.abs(Ez-sinewave(np.arange(I+1)*dx,n*dt))
         L2errEz[n] = np.sqrt(dx)*np.linalg.norm(errEz,2)
 
-    plt.plot(Ez)
-    plt.plot(errEz)
-    plt.plot(L2errEz[1:])
-    plt.plot(QQ[1:])
-    plt.ylim((0,0.05))
-    plt.show()
