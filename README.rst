@@ -28,28 +28,27 @@ How to use
 
 .. code-block:: python
 
-import pymtk
-import numpy as np
+   import pymtk
+   import numpy as np
+   
+   # Number or discretized points
+   N = 11
+   
+   # Operator order
+   k = 4
+   
+   # Fourth order Divergent and Gradient
+   D_4 = pymtk.Divergent(order=k)
+   G_4 = pymtk.Gradient(order=k)
+   
+   # Weight Matrices
+   Q = np.diag(D_4.weight_vector(N))
+   P = np.diag(G_4.weight_vector(N))
+   
+   # Then you can call the operator passing the number of
+   # grid points and it will return a numpy matrix
+   D = D_4(N) 
 
-# Number or discretized points
-N = 11
-
-# Operator order
-k = 4
-
-# Fourth order Divergent and Gradient
-D_4 = pymtk.Divergent(order=k)
-G_4 = pymtk.Gradient(order=k)
-
-# Weight Matrices
-Q = np.diag(D_4.weight_vector(N))
-P = np.diag(G_4.weight_vector(N))
-
-# Then you can call the operator passing the number of
-# grid points and it will return a numpy matrix
-D = D_4(N) 
-
-::
 
 
 
