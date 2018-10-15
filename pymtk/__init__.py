@@ -3,7 +3,6 @@
 """Top-level package for pymtk."""
 
 from sympy import nsimplify, Matrix
-from numpy import s_
 
 from pymtk.pymtk import Gradient, Divergent
 
@@ -25,5 +24,5 @@ def rationalize(x, tolerance=10e-9):
 
 def flipall(a):
     """Flip all axes of a given matrix (sparse or not)"""
-    sl = np.s_[::-1] 
+    sl = slice(None, None, -1)
     return a[tuple([sl]*a.ndim)]
