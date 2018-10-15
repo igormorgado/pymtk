@@ -133,8 +133,11 @@ class MimeticOperator:
         asrmsg = f"Discretized grid must be larger than {3*self.order - 1}"
         assert (N >= 3*self.order -1), asrmsg
 
+        # Works for Divergent N+1 -> N  matrix
         k, l = self.boundary_rows.shape
-        O = self.sliding_window(self.stencil, N)
+
+        O = zeros((N,N+1))
+        O[1:-1] = self.sliding_window(self.stencil, N-2)
         O[:k,:l] = self.boundary_rows.copy()
         O[-k:,-l:] = - flipud(fliplr(self.boundary_rows))
         return O
