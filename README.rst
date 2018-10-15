@@ -28,27 +28,59 @@ How to use
 
 .. code-block:: python
 
-   import pymtk
    import numpy as np
-   
-   # Number or discretized points
-   N = 11
-   
-   # Operator order
-   k = 4
-   
-   # Fourth order Divergent and Gradient
-   D_4 = pymtk.Divergent(order=k)
-   G_4 = pymtk.Gradient(order=k)
-   
-   # Weight Matrices
-   Q = np.diag(D_4.weight_vector(N))
-   P = np.diag(G_4.weight_vector(N))
-   
-   # Then you can call the operator passing the number of
-   # grid points and it will return a numpy matrix
-   D = D_4(N) 
+   import pymtk
 
+
+   # Keep things nicer
+   np.set_printoptions(suppress=True)
+   np.set_printoptions(precision=4)
+   np.set_printoptions(linewidth=150)
+   
+   # Operator Order
+   k = 4
+
+   # Discretized points
+   N = 4*k-2
+
+   # Build the 4th order mimetic divergent to 16 points grid
+   Dk = pymtk.Divergent(order=k)
+   D = Dk(N)
+   Q = np.diag(Dk.weight_vector(N))
+
+   # Build the 4th order mimetic gradient to 16 points grid
+   Gk = pymtk.Gradient(order=k)
+   G = Gk(N)
+   P = np.diag(Gk.weight_vector(N))
+   
+   # TESTS
+
+   # Divergent 
+   # First Mimetic Condition
+   np.all((Q @ D).sum(axis=1) < 1e120)
+
+   # Second Mimetic
+   tfc = np.zeros(N+1)
+   tfc[0], tfc[-1] = -1, 1
+   np.all((Q @ D).sum(axis=0) - tfc) < 1e120
+   
+
+   # Gradient
+
+   # Fist mimetic condition
+   np.all((P @ G).sum(axis=1) < 1e120)
+
+   # Second Mimetic Condition
+   tfc = np.zeros(N+2)
+   tfc[0], tfc[-1] = -1, 1
+   np.all((P @ G).sum(axis=0) - tfc) < 1e120
+
+   # Flux operator Btilde
+   Dhat = vstack((np.zeros((1,N+1)), D, np.zeros((1,N+1))))
+   Btilde = Dhat + (G.T @ P)
+
+   # Laplacian
+   L = D @ G
 
 
 

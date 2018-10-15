@@ -29,17 +29,6 @@ class MimeticOperator:
         self._boundary_rows()       # A(alpha)
 
 
-
-    # @property
-    # def N(self):
-    #     return self._N
-
-    # @N.setter(self, value):
-    #     asrmsg = f"Discretized grid must be larger than {3*self.order - 1}"
-    #     assert (N >= 3*self.order -1), asrmsg
-
-    #     self._N = value
-
     @staticmethod
     def sliding_window(window, elements):
         n=len(window)
@@ -129,18 +118,10 @@ class MimeticOperator:
     def _operator_matrix(self):
         """To build the operator matrix we need the number of discretized points"""
 
+
+    @abc.abstractmethod
     def __call__(self, N=None):
-        asrmsg = f"Discretized grid must be larger than {3*self.order - 1}"
-        assert (N >= 3*self.order -1), asrmsg
-
-        # Works for Divergent N+1 -> N  matrix
-        k, l = self.boundary_rows.shape
-
-        O = zeros((N,N+1))
-        O[1:-1] = self.sliding_window(self.stencil, N-2)
-        O[:k,:l] = self.boundary_rows.copy()
-        O[-k:,-l:] = - flipud(fliplr(self.boundary_rows))
-        return O
+        raise NotImplementedError('operator must implement boundary stencil')
 
 
     
@@ -188,6 +169,21 @@ class Divergent(MimeticOperator):
         self.Pi = Pi
         self.Nu = Nu
 
+
+    def __call__(self, N=None):
+        asrmsg = f"Discretized grid must be larger than {3*self.order - 1}"
+        assert (N >= 3*self.order -1), asrmsg
+
+        # Works for Divergent N+1 -> N  matrix
+        k, l = self.boundary_rows.shape
+
+        O = zeros((N,N+1))
+
+        # THe N-2 here ONLY works to 4th order.
+        O[1:-1] = self.sliding_window(self.stencil, N-2)
+        O[:k,:l] = self.boundary_rows.copy()
+        O[-k:,-l:] = - flipud(fliplr(self.boundary_rows))
+        return O
 
 
 class Gradient(MimeticOperator):
@@ -246,4 +242,25 @@ class Gradient(MimeticOperator):
         self.Pi = Pi
         self.Nu = Nu
 
+
+    def weight_vector(self, N):
+        return self._weight_vector(N+1)
+
         
+    def __call__(self, N=None):
+        """ Maps N+2 --> N+1"""
+
+        asrmsg = f"Discretized grid must be larger than {3*self.order - 1}"
+        assert (N >= 3*self.order -1), asrmsg
+
+        # Works for Divergent N+1 -> N  matrix
+        k, l = self.boundary_rows.shape
+
+        O = zeros((N+1,N+2))
+
+        # THe N-1 here ONLY works to 4th order.
+        O[1:-1] = self.sliding_window(self.stencil, N-1)
+        O[:k,:l] = self.boundary_rows.copy()
+        O[-k:,-l:] = - flipud(fliplr(self.boundary_rows))
+        return O
+
