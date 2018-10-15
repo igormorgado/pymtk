@@ -54,34 +54,43 @@ How to use
    P = np.diag(Gk.weight_vector(N))
    
    # TESTS
+   tol=1e-14
+
 
    # Divergent 
    # First Mimetic Condition
-   np.all((Q @ D).sum(axis=1) < 1e120)
+   np.all((Q @ D).sum(axis=1) < tol)
 
    # Second Mimetic
    tfc = np.zeros(N+1)
    tfc[0], tfc[-1] = -1, 1
-   np.all((Q @ D).sum(axis=0) - tfc) < 1e120
+   np.all(((Q @ D).sum(axis=0) - tfc) < tol)
    
 
    # Gradient
 
    # Fist mimetic condition
-   np.all((P @ G).sum(axis=1) < 1e120)
+   np.all((P @ G).sum(axis=1) < tol)
 
    # Second Mimetic Condition
    tfc = np.zeros(N+2)
    tfc[0], tfc[-1] = -1, 1
-   np.all((P @ G).sum(axis=0) - tfc) < 1e120
+   np.all(((P @ G).sum(axis=0) - tfc) < tol)
 
    # Flux operator Btilde
-   Dhat = vstack((np.zeros((1,N+1)), D, np.zeros((1,N+1))))
+   Dhat = np.vstack((np.zeros((1,N+1)), D, np.zeros((1,N+1))))
    Btilde = Dhat + (G.T @ P)
 
    # Laplacian
    L = D @ G
 
+   # Fist mimetic condition
+   np.all((L).sum(axis=1) < tol)
+
+   # Second Mimetic Condition (fails)
+   tfc = np.zeros(N+2)
+   tfc[0], tfc[-1] = -1, 1
+   np.all((L.sum(axis=0) - tfc) < tol)
 
 
 Features
