@@ -43,6 +43,9 @@ How to use
    # Discretized points
    N = 4*k-2
 
+   # Anti diagonal matrix
+   P_ = lambda N: np.fliplr(np.diag(np.ones(N)))
+
    # Build the 4th order mimetic divergent to 16 points grid
    Dk = pymtk.Divergent(order=k)
    D = Dk(N)
@@ -54,7 +57,7 @@ How to use
    P = np.diag(Gk.weight_vector(N))
    
    # TESTS
-   tol=1e-14
+   tol=1e-15
 
 
    # Divergent 
@@ -66,6 +69,8 @@ How to use
    tfc[0], tfc[-1] = -1, 1
    np.all(((Q @ D).sum(axis=0) - tfc) < tol)
    
+   # Is Divergent Skew-Centro-Simmetric ( P_N @ D @ P_{N+1} = - D )
+   np.all( (P_(N) @ D @ P_(N+1) ) + D < tol)
 
    # Gradient
 
@@ -78,6 +83,10 @@ How to use
    tfc[0], tfc[-1] = -1, 1
    G_TFC = (P @ G).sum(axis=0) 
    np.all((G_TFC - tfc) < tol)
+
+   # Is Gradient Skew-Centro-Simmetric ( P_N @ G @ P_{N+1} = - D )
+   np.all( (P_(N+1) @ G @ P_(N+2) ) + G < tol)
+
 
    # Flux operator Btilde
    Dhat = np.vstack((np.zeros((1,N+1)), D, np.zeros((1,N+1))))
@@ -178,7 +187,7 @@ Is possible to extract useful operator informations as
    array([[ -1.,   5., -10.,  10.,  -5.,   1.]])
 
 
-5. The operator discretized in $N$ intervals
+5. The operator discretized in N intervals
 
 .. code-block:: python
 

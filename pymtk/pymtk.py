@@ -182,7 +182,7 @@ class Divergent(MimeticOperator):
         # THe N-2 here ONLY works to 4th order.
         O[1:-1] = self.sliding_window(self.stencil, N-2)
         O[:k,:l] = self.boundary_rows.copy()
-        O[-k:,-l:] = self.boundary_rows.ravel()[::-1].reshape(self.boundary_rows.shape)
+        O[-k:,-l:] = -self.boundary_rows.ravel()[::-1].reshape(self.boundary_rows.shape)
         return O
 
 
@@ -261,6 +261,6 @@ class Gradient(MimeticOperator):
         # THe N-1 here ONLY works to 4th order.
         O[1:-1] = self.sliding_window(self.stencil, N-1)
         O[:k,:l] = self.boundary_rows.copy()
-        O[-k:,-l:] = self.boundary_rows.ravel()[::-1].reshape(self.boundary_rows.shape)
+        O[-k:,-l:] = -self.boundary_rows.ravel()[::-1].reshape(self.boundary_rows.shape)
         return O
 
