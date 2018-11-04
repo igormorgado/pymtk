@@ -270,6 +270,18 @@ Is possible to extract useful operator informations as
    #        [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    , -0.0026,  0.1024, -0.5526,  1.489 , -4.398 ,  3.3617]])
 
 
+TODO
+----
+
+1. Split the Operator methods in different files.
+
+2. Create Unit tests to check the operator conditions (similar to tests shown in README)
+
+3. Generating $R$ matrices in compact form (ABOUALI 2012- High Order Compact Castillo-Grone' s Mimetic Operators)
+
+4. Move to sparse matrices (and check the speed up against large matrices)
+
+5. Check speedup using memory compacted data
 
 Credits
 -------
