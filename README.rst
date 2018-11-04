@@ -160,6 +160,12 @@ Is possible to extract useful operator informations as
    D.lambda_
    array([-0.00181])
 
+6. Operator stencil
+
+.. code-block:: python
+
+    D.stencil
+    array([ 0.04167, -1.125  ,  1.125  , -0.04167])
 
 
 
