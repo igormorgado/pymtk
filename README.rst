@@ -35,7 +35,7 @@ How to use
    # Keep things nicer
    np.set_printoptions(suppress=True)
    np.set_printoptions(precision=4)
-   np.set_printoptions(linewidth=150)
+   np.set_printoptions(linewidth=180)
    
    # Operator Order
    k = 4
@@ -70,12 +70,14 @@ How to use
    # Gradient
 
    # Fist mimetic condition
-   np.all((P @ G).sum(axis=1) < tol)
+   G_DCZ = (P @ G).sum(axis=1) 
+   np.all(G_DCZ < tol)
 
    # Second Mimetic Condition
    tfc = np.zeros(N+2)
    tfc[0], tfc[-1] = -1, 1
-   np.all(((P @ G).sum(axis=0) - tfc) < tol)
+   G_TFC = (P @ G).sum(axis=0) 
+   np.all((G_TFC - tfc) < tol)
 
    # Flux operator Btilde
    Dhat = np.vstack((np.zeros((1,N+1)), D, np.zeros((1,N+1))))
@@ -96,7 +98,61 @@ How to use
 Features
 --------
 
-* TODO
+* Once operator is created, for example
+
+.. code-block:: python
+
+    import pymtk
+    D = pymtk.Divergent(order=4)
+
+Is possible to extract useful operator informations as
+
+1. Upper left boundary rows
+
+.. code-block:: python
+
+   D.boundary_rows
+   array([[-0.91506,  0.70031,  0.39105, -0.22438,  0.04969, -0.00161],
+          [ 0.04167, -1.125  ,  1.125  , -0.04167,  0.     ,  0.     ],
+          [ 0.     ,  0.04167, -1.125  ,  1.125  , -0.04167,  0.     ],
+          [ 0.     ,  0.     ,  0.04167, -1.125  ,  1.125  , -0.04167]])
+
+
+
+2. Inner product weights
+
+.. code-block:: python
+
+    D.weights
+    array([1.12674, 0.74479, 1.17187, 0.9566 ])
+
+
+3. Weight vector
+
+.. code-block:: python
+
+   D.weight_vector(11)
+   array([1.12674, 0.74479, 1.17187, 0.9566 , 1.     , 1.     , 1.     , 0.9566 , 1.17187, 0.74479, 1.12674])
+
+
+3. Weight matrix order N
+
+.. code-block:: python
+
+   np.diag(D.weight_vector(11))
+
+
+5. Operator boundary lambda factor
+
+.. code-block:: python
+
+   D.lambda_
+   array([-0.00181])
+
+
+
+
+
 
 Credits
 -------
