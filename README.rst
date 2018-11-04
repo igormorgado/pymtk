@@ -98,7 +98,7 @@ To checkout call `ipython3` and run the code below:
    G_TFC = (P @ G).sum(axis=0) 
    np.all((G_TFC - tfc) < tol)
 
-   # Is Gradient Skew-Centro-Simmetric ( P_N @ G @ P_{N+1} = - D )
+   # Is Gradient Skew-Centro-Simmetric ( P_{N+1} @ G @ P_{N+2} = -G )
    np.all( (P_(N+1) @ G @ P_(N+2) ) + G < tol)
 
 
