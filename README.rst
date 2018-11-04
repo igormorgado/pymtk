@@ -102,43 +102,46 @@ Features
 
 .. code-block:: python
 
-    import pymtk
-    D_4 = pymtk.Divergent(order=4)
+   import pymtk
+   import numpy as np
+   D_4 = pymtk.Divergent(order=4)
+
 
 Is possible to extract useful operator informations as
 
-1. Upper left boundary rows
+1. Upper left(and bottom right) boundary rows
 
 .. code-block:: python
 
    D_4.boundary_rows
-   array([[-0.91506,  0.70031,  0.39105, -0.22438,  0.04969, -0.00161],
-          [ 0.04167, -1.125  ,  1.125  , -0.04167,  0.     ,  0.     ],
-          [ 0.     ,  0.04167, -1.125  ,  1.125  , -0.04167,  0.     ],
-          [ 0.     ,  0.     ,  0.04167, -1.125  ,  1.125  , -0.04167]])
+   array([[-0.915061633,  0.700308166,  0.391050334, -0.224383667,  0.049691834, -0.001605033],
+          [ 0.041666667, -1.125      ,  1.125      , -0.041666667,  0.         ,  0.         ],
+          [ 0.         ,  0.041666667, -1.125      ,  1.125      , -0.041666667,  0.         ],
+          [ 0.         ,  0.         ,  0.041666667, -1.125      ,  1.125      , -0.041666667]])
+
+   - np.flipud(np.fliplr(D_4.boundary_rows))
+   array([[ 0.041666667, -1.125      ,  1.125      , -0.041666667, -0.         , -0.         ],
+          [-0.         ,  0.041666667, -1.125      ,  1.125      , -0.041666667, -0.         ],
+          [-0.         , -0.         ,  0.041666667, -1.125      ,  1.125      , -0.041666667],
+          [ 0.001605033, -0.049691834,  0.224383667, -0.391050334, -0.700308166,  0.915061633]])
 
 
 
-2. Inner product weights
-
-.. code-block:: python
-
-    D_4.weights
-    array([1.12674, 0.74479, 1.17187, 0.9566 ])
-
-
-3. Weight vector
+2. Inner product weights and associated vector/matrix
 
 .. code-block:: python
+
+   D_4.lambda_
+   array([-0.001808449])
+   
+   D_4.weights
+   array([1.126736111, 0.744791667, 1.171875   , 0.956597222])
 
    D_4.weight_vector(11)
-   array([1.12674, 0.74479, 1.17187, 0.9566 , 1.     , 1.     , 1.     , 0.9566 , 1.17187, 0.74479, 1.12674])
+   array([1.126736111, 0.744791667, 1.171875   , 0.956597222, 1.         , 1.,
+          1.         , 0.956597222, 1.171875   , 0.744791667, 1.126736111])
 
-
-3. Weight matrix order N
-
-.. code-block:: python
-
+   np.set_printoptions(precision=5)
    np.diag(D.weight_vector(11))
    array([[1.12674, 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     ],
           [0.     , 0.74479, 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     ],
@@ -153,21 +156,7 @@ Is possible to extract useful operator informations as
           [0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 0.     , 1.12674]])
 
 
-5. Operator boundary lambda factor
-
-.. code-block:: python
-
-   D_4.lambda_
-   array([-0.00181])
-
-6. Operator stencil
-
-.. code-block:: python
-
-    D_4.stencil
-    array([ 0.04167, -1.125  ,  1.125  , -0.04167])
-
-7. Boundary Generator (associated Vandermond matrix)
+3. Operator Vandermonde generators and stencil
 
 .. code-block:: python
 
@@ -176,15 +165,36 @@ Is possible to extract useful operator informations as
           [-1.5, -0.5,  0.5,  1.5,  2.5,  3.5],
           [-2.5, -1.5, -0.5,  0.5,  1.5,  2.5],
           [-3.5, -2.5, -1.5, -0.5,  0.5,  1.5]])
+   
+   D_4.stencil
+   array([ 0.041666667, -1.125      ,  1.125      , -0.041666667])
 
 
-8. Operator Nullspace
+4. Operator Nullspace
+
+.. code-block:: python
 
    D_4.Nu
    array([[ -1.,   5., -10.,  10.,  -5.,   1.]])
 
 
+5. The operator discretized in $N$ intervals
 
+.. code-block:: python
+
+   np.set_printoptions(precision=4)
+   D_4(11)
+   array([[-0.9151,  0.7003,  0.3911, -0.2244,  0.0497, -0.0016,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.    ,  0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.0417, -1.125 ,  1.125 , -0.0417,  0.    ,  0.    ,  0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.0417, -1.125 ,  1.125 , -0.0417, -0.    , -0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    , -0.    ,  0.0417, -1.125 ,  1.125 , -0.0417, -0.    ],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    , -0.    , -0.    ,  0.0417, -1.125 ,  1.125 , -0.0417],
+          [ 0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.    ,  0.0016, -0.0497,  0.2244, -0.3911, -0.7003,  0.9151]])
 
 
 
