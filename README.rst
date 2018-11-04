@@ -103,7 +103,7 @@ Features
 .. code-block:: python
 
     import pymtk
-    D = pymtk.Divergent(order=4)
+    D_4 = pymtk.Divergent(order=4)
 
 Is possible to extract useful operator informations as
 
@@ -111,7 +111,7 @@ Is possible to extract useful operator informations as
 
 .. code-block:: python
 
-   D.boundary_rows
+   D_4.boundary_rows
    array([[-0.91506,  0.70031,  0.39105, -0.22438,  0.04969, -0.00161],
           [ 0.04167, -1.125  ,  1.125  , -0.04167,  0.     ,  0.     ],
           [ 0.     ,  0.04167, -1.125  ,  1.125  , -0.04167,  0.     ],
@@ -123,7 +123,7 @@ Is possible to extract useful operator informations as
 
 .. code-block:: python
 
-    D.weights
+    D_4.weights
     array([1.12674, 0.74479, 1.17187, 0.9566 ])
 
 
@@ -131,7 +131,7 @@ Is possible to extract useful operator informations as
 
 .. code-block:: python
 
-   D.weight_vector(11)
+   D_4.weight_vector(11)
    array([1.12674, 0.74479, 1.17187, 0.9566 , 1.     , 1.     , 1.     , 0.9566 , 1.17187, 0.74479, 1.12674])
 
 
@@ -157,15 +157,32 @@ Is possible to extract useful operator informations as
 
 .. code-block:: python
 
-   D.lambda_
+   D_4.lambda_
    array([-0.00181])
 
 6. Operator stencil
 
 .. code-block:: python
 
-    D.stencil
+    D_4.stencil
     array([ 0.04167, -1.125  ,  1.125  , -0.04167])
+
+7. Boundary Generator (associated Vandermond matrix)
+
+.. code-block:: python
+
+   D_4.boundary_generator()
+   array([[-0.5,  0.5,  1.5,  2.5,  3.5,  4.5],
+          [-1.5, -0.5,  0.5,  1.5,  2.5,  3.5],
+          [-2.5, -1.5, -0.5,  0.5,  1.5,  2.5],
+          [-3.5, -2.5, -1.5, -0.5,  0.5,  1.5]])
+
+
+8. Operator Nullspace
+
+   D_4.Nu
+   array([[ -1.,   5., -10.,  10.,  -5.,   1.]])
+
 
 
 
