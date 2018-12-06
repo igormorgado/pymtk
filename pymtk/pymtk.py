@@ -5,7 +5,7 @@
 import abc
 
 from numpy import ( arange, vander, zeros, array, newaxis, concatenate, float_,
-                  linspace, flipud, fliplr, ones )
+                  linspace, flipud, fliplr, ones, zeros, hstack )
 from sympy import linsolve, Matrix
 from scipy.linalg import lstsq
 
@@ -263,4 +263,26 @@ class Gradient(MimeticOperator):
         O[:k,:l] = self.boundary_rows.copy()
         O[-k:,-l:] = -self.boundary_rows.ravel()[::-1].reshape(self.boundary_rows.shape)
         return O
+
+
+def D2(N):
+    return MimeticOperator.sliding_window(array([-1, 1]), N)
+    
+def D2weight(N):
+    return ones(N)
+
+def G2(N):
+    G = MimeticOperator.sliding_window(array([-1, 1]), N+1)
+    boundary = array([-8/3, 3, -1/3])
+    G[0] = hstack((boundary, zeros(N+2-len(boundary))))
+    G[-1] = hstack((zeros(N+2-len(boundary)),-boundary[::-1]))
+    return G
+
+def G2weight(N):
+    b = array([3/8, 9/8])
+    W = ones(N+1)
+    W[0:2] = b
+    W[-2:] = b[::-1]
+    return W 
+
 
