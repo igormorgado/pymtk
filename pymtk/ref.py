@@ -140,7 +140,7 @@ def gradient_4th_order_castillo2000(N):
     """
     G = np.zeros((N+1, N+2))
     G[1:N] = pymtk.MimeticOperator.sliding_window(stencil_4th_order(), N-1)
-    G[0][:6] = np.array([-1152/407, 10063/3256, 2483/9768, -3309/3256, 2099/3256, 2099/3256, -697/4884])
+    G[0][:6] = np.array([-1152/407, 10063/3256, 2483/9768, -3309/3256, 2099/3256, -697/4884])
     G[1][:6] = np.array([0, -11/12, 17/24, 3/8, -5/24, 1/24])
     G[-2:] = - np.fliplr(np.flipud(G[:2]))
     return G
@@ -160,3 +160,33 @@ def divergent_34_order_runyan2011(N):
     D[0][:5] = np.array([-199/208, 271/312, 7/52, -5/104, 1/624])
     D[N-1] = -(D[0][::-1])
     return D
+
+
+if __name__ == '__main__':
+
+    N = 12
+
+    G4_CASTILLO = pymtk.ref.gradient_4th_order_castillo2000(N)
+    D4_CASTILLO = pymtk.ref.divergent_4th_order_castillo2000(N)
+    G4_ROJAS08 = pymtk.ref.gradient_4th_order_rojas2008(N)
+    D4_ROJAS08 = pymtk.ref.divergent_4th_order_rojas2008(N)
+    G4_ROJAS13 = pymtk.ref.gradient_4th_order_rojas2013(N)
+    D4_ROJAS13 = pymtk.ref.divergent_4th_order_rojas2013(N)
+
+    G4_IGOR_ = pymtk.Gradient(order=4)
+    G4_IGOR = G4_IGOR_(N)
+
+    D4_IGOR_ = pymtk.Divergent(order=4)
+    D4_IGOR = D4_IGOR_(N)
+
+    print(np.all(np.isclose(G4_IGOR, G4_CASTILLO)))
+    print(np.all(np.isclose(G4_IGOR, G4_ROJAS08)))
+    print(np.all(np.isclose(G4_IGOR, G4_ROJAS13)))
+
+    print(np.all(np.isclose(D4_IGOR, D4_CASTILLO)))
+    print(np.all(np.isclose(D4_IGOR, D4_ROJAS08)))
+    print(np.all(np.isclose(D4_IGOR, D4_ROJAS13)))
+
+    print(G4_IGOR[:2, :6])
+    print(G4_ROJAS13[:2, :6])
+    print(G4_CASTILLO[:2, :6])

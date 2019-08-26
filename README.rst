@@ -283,6 +283,8 @@ TODO
 
 5. Check speedup using memory compacted data
 
+6. Possibly add the feature to customize linear solver coefficients. To find different boundary conditions
+
 Credits
 -------
 

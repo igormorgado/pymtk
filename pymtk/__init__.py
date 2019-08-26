@@ -4,11 +4,12 @@
 
 from sympy import nsimplify, Matrix
 
-from pymtk.pymtk import Gradient, Divergent
+from pymtk.pymtk import MimeticOperator, Gradient, Divergent
+import pymtk.ref as ref
 
-__author__ = """Igor Morgado"""
-__email__ = 'morgado.igor@gmail.com'
-__version__ = '0.1.0'
+author__ = """Igor Morgado"""
+email__ = 'morgado.igor@gmail.com'
+version__ = '0.1.0'
 
 
 def rationalize(x, tolerance=10e-9):
